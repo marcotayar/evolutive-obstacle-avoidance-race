@@ -1,9 +1,9 @@
 #ifndef TRACK_H
 #define TRACK_H
 
-#define TRACK_WIDTH 30
-#define TRACK_HEIGHT 150
-#define COMMANDS_LENGTH 300
+#define TRACK_WIDTH 100
+#define TRACK_HEIGHT 100
+#define COMMANDS_LENGTH 210
 
 // Estrutura de um indivíduo
 typedef struct {

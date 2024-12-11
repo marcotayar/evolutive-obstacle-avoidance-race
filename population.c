@@ -60,7 +60,7 @@ void crossover(Individual *parent1, Individual *parent2, Individual *offspring) 
 
 // Mutação de um indivíduo
 void mutate(Individual *ind) {
-    float mutationRate = 0.01f; // Taxa de mutação de 1%
+    float mutationRate = 0.03f; // Taxa de mutação de 3%
     for (int i = 0; i < COMMANDS_LENGTH; i++) {
         if (((float)rand() / (float)RAND_MAX) < mutationRate) {
             ind->commands[i] = rand() % 3;

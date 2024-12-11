@@ -2,10 +2,10 @@
 #include "headers/fitness.h"
 
 // Calcula a fitness baseado no tempo, penalidades e proximidade
-float calculateFitness(int time, int penalty, float distanceFactor) {
+float calculateFitness(int time, int penalty, float distanceFactor, int cima) {
     // Ajuste da fórmula: maior proximidade, menor tempo e penalidades
     // Multiplicamos distanceFactor por um valor maior para dar mais peso
-    float score = distanceFactor * 1000.0f - (float)(time + penalty * 10);
+    float score = cima * 500 + 10000 + distanceFactor * 100000.0f - (float)(time*15 + penalty * 60);
     if (score < 0.0f) score = 0.0f; // Evita fitness negativo
     return score;
 }

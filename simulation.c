@@ -7,7 +7,7 @@
 #include "headers/fitness.h"
 
 #define CELL_SIZE 10
-#define FPS 60
+#define FPS 90
 
 // Definição de cores em RGB
 #define WHITE 0xFFFFFF
@@ -45,6 +45,7 @@ static void simulateAndRender(SDL_Renderer *renderer, char track[TRACK_HEIGHT][T
     int x = 0, y = 0; 
     int timeSteps = 0;
     int collisions = 0;
+    int cima = 0;
 
     printf("=== Simulação da Geração %d ===\n", generation);
     printf("Fitness do Melhor Indivíduo: %.2f\n", ind->fitness);
@@ -77,6 +78,12 @@ static void simulateAndRender(SDL_Renderer *renderer, char track[TRACK_HEIGHT][T
                 break;
             case 2: // Direita
                 if (x < TRACK_WIDTH - 1) x++;
+                break;
+            case 3: //Cima
+                if (y > 0) {
+                    y--;
+                    cima ++;
+                    }
                 break;
             default:
                 // Caso de comando inválido, ignore ou penalize
@@ -134,7 +141,7 @@ int main(void) {
     createTrack(track);
     initializePopulation(&population);
 
-    for (int generation = 0; generation < 100; generation++) {
+    for (int generation = 0; generation < 400; generation++) {
         evaluatePopulation(&population, track);
         
         // Ordenar a população por fitness após avaliar
@@ -143,8 +150,8 @@ int main(void) {
         // Imprimir estatísticas
         printFitnessStats(&population, generation);
 
-        // Simular melhor indivíduo a cada 20 gerações
-        if (generation % 20 == 0) {
+        // Simular melhor indivíduo a cada 80 gerações
+        if (generation % 80 == 0) {
             simulateAndRender(renderer, track, &population.individuals[0], generation);
         }
 
