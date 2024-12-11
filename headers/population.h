@@ -1,8 +1,8 @@
 #ifndef POPULATION_H
 #define POPULATION_H
 
-#define POPULATION_SIZE 150
-#define TOURNAMENT_SIZE 5
+#define POPULATION_SIZE 3000
+#define TOURNAMENT_SIZE 30
 
 #include "track.h"
 

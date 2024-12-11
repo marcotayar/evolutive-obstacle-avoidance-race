@@ -20,7 +20,7 @@ void evaluatePopulation(Population *pop, char track[TRACK_HEIGHT][TRACK_WIDTH]) 
 
 void evolvePopulation(Population *pop, char track[TRACK_HEIGHT][TRACK_WIDTH]) {
     Population nextGen;
-    int elitismCount = 6; // Aumentando elitismo
+    int elitismCount = 20; // Aumentando elitismo
 
     // Elitismo: Copiar melhores indivíduos para a próxima geração
     for (int i = 0; i < elitismCount; i++) {
@@ -52,7 +52,7 @@ Individual tournamentSelection(Population *pop) {
 }
 
 void mutate(Individual *ind) {
-    float mutationRate = 0.05; // Ajuste na taxa de mutação
+    float mutationRate = 0.01; // Ajuste na taxa de mutação
     for (int i = 0; i < COMMANDS_LENGTH; i++) {
         if ((rand() / (float)RAND_MAX) < mutationRate) {
             ind->commands[i] = rand() % 3;

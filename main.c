@@ -13,7 +13,7 @@ int main() {
 
     initializePopulation(&population);
 
-    for (int generation = 0; generation < 1000; generation++) {
+    for (int generation = 0; generation <= 1000; generation++) {
         evaluatePopulation(&population, track);
         printFitnessStats(&population, generation);
         evolvePopulation(&population, track);
