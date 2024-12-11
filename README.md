@@ -1,6 +1,6 @@
 # Evolutive-race
 
-**Evolutive-race** é um projeto que implementa um sistema evolutivo para controlar um carrinho em uma pista, com o objetivo de melhorar a trajetória percorrida ao longo das gerações. A simulação é renderizada em tempo real utilizando a biblioteca **SDL2**, e a cada 80 gerações, o melhor indivíduo da população é mostrado para análise visual.
+**Evolutive-race** é um projeto que implementa um sistema evolutivo para controlar um carrinho em uma pista, com o objetivo de melhorar a trajetória percorrida ao longo das gerações. A simulação é renderizada utilizando a biblioteca **SDL2**, e a cada 80 gerações, o melhor indivíduo da população é mostrado para análise visual.
 
 ## Funcionalidades
 
