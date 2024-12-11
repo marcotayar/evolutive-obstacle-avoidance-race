@@ -51,7 +51,7 @@ Este arquivo define a população de indivíduos e funções para manipulação 
 #### Constantes:
 - `POPULATION_SIZE`: Número de indivíduos na população (3000).
 - `TOURNAMENT_SIZE`: Número de indivíduos na seleção por torneio (30).
-- `COMMANDS_LENGTH`: Número de comandos por indivíduo (210).
+- `COMMANDS_LENGTH`: Número de comandos por indivíduo (200).
 - `TRACK_WIDTH` e `TRACK_HEIGHT`: Dimensões da pista (100x100).
 
 ## Algoritmos Evolutivos
@@ -62,8 +62,9 @@ O algoritmo segue o ciclo clássico de algoritmos genéticos:
 2. **Avaliação**: Cada indivíduo é avaliado de acordo com o seu desempenho na pista.
 3. **Seleção**: Indivíduos são selecionados para reprodução através de torneios.
 4. **Cruzamento**: Dois indivíduos selecionados cruzam seus comandos para gerar um novo descendente.
-5. **Mutação**: O descendente sofre mutação com uma taxa de 3%.
+5. **Mutação**: O descendente sofre mutação com uma taxa de 2%.
 6. **Substituição**: A população é substituída pela nova geração.
+7. **Genocídio**: Se a população fica estagnada em um mesmo resultado, durante 100 gerações e sem encontrar o ponto final, a população é reinicializada, ou seja, todos os indivíduos são substituidos por novos gerados aleatoriamente.
 
 Este processo é repetido por várias gerações até que uma solução satisfatória seja alcançada.
 
