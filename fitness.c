@@ -1,23 +1,20 @@
 #include <stdio.h>
 #include "headers/fitness.h"
 
-float calculateFitness(int time, int penalty, int distance) {
-    // Ajustando a fórmula para priorizar menos penalidades e maior distância
-    if (time + penalty == 0) return 0.0;
-    return distance / (float)(time + penalty * 2);
+// Calcula a fitness baseado no tempo, penalidades e proximidade
+float calculateFitness(int time, int penalty, float distanceFactor) {
+    // Ajuste da fórmula: maior proximidade, menor tempo e penalidades
+    // Multiplicamos distanceFactor por um valor maior para dar mais peso
+    float score = distanceFactor * 1000.0f - (float)(time + penalty * 10);
+    if (score < 0.0f) score = 0.0f; // Evita fitness negativo
+    return score;
 }
 
-void evaluateFitness(Population *pop, char track[TRACK_HEIGHT][TRACK_WIDTH]) {
-    for (int i = 0; i < POPULATION_SIZE; i++) {
-        int result = simulateIndividual(&pop->individuals[i], track);
-        pop->individuals[i].fitness = result > 0 ? result : -1.0f;
-    }
-}
-
+// Imprime estatísticas de fitness da população
 void printFitnessStats(Population *pop, int generation) {
     float sumFitness = 0.0f;
     float bestFitness = -1.0f;
-    float worstFitness = 10000.0f;
+    float worstFitness = 1000000.0f; // Valor grande para iniciar
 
     for (int i = 0; i < POPULATION_SIZE; i++) {
         float fitness = pop->individuals[i].fitness;
@@ -30,5 +27,5 @@ void printFitnessStats(Population *pop, int generation) {
     pop->bestFitness = bestFitness;
     pop->worstFitness = worstFitness;
 
-    printf("Generation %d: Avg %.2f, Best %.2f, Worst %.2f\n", generation, pop->avgFitness, pop->bestFitness, pop->worstFitness);
+    printf("Geração %d: Média: %.2f, Melhor: %.2f, Pior: %.2f\n", generation, pop->avgFitness, pop->bestFitness, pop->worstFitness);
 }
