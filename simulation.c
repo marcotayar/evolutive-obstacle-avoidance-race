@@ -138,30 +138,50 @@ int main(void) {
     char track[TRACK_HEIGHT][TRACK_WIDTH];
     Population population;
 
+    FILE *fitnessFile = fopen("fitness_data.csv", "w");
+    if (!fitnessFile) {
+        printf("Erro ao criar arquivo de fitness.\n");
+        SDL_DestroyRenderer(renderer);
+        SDL_DestroyWindow(window);
+        SDL_Quit();
+        return 1;
+    }
+
+    // Escreve o cabeçalho do arquivo CSV
+    fprintf(fitnessFile, "Generation,AverageFitness,BestFitness,WorstFitness\n");
+
     createTrack(track);
     initializePopulation(&population);
 
-    for (int generation = 0; generation < 400; generation++) {
+    for (int generation = 0; generation <= 1000; generation++) {
         evaluatePopulation(&population, track);
         
-        // Ordenar a população por fitness após avaliar
         sortPopulationByFitness(&population);
 
-        // Imprimir estatísticas
         printFitnessStats(&population, generation);
 
-        // Simular melhor indivíduo a cada 80 gerações
-        if (generation % 80 == 0) {
+        // Salva os dados de fitness no arquivo
+        saveFitnessData(&population, generation, fitnessFile);
+
+        if (generation % 50 == 0) {
             simulateAndRender(renderer, track, &population.individuals[0], generation);
         }
 
-        // Evoluir população
         evolvePopulation(&population, track);
     }
+
+    fclose(fitnessFile);
 
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
 
+     // Executa o script Python para plotar os dados
+    int result = system("python3 graficos.py");
+    if (result != 0) {
+        printf("Erro ao executar o script de plotagem.\n");
+    }
+
     return 0;
 }
+

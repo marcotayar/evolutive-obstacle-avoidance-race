@@ -29,3 +29,18 @@ void printFitnessStats(Population *pop, int generation) {
 
     printf("Geração %d: Média: %.2f, Melhor: %.2f, Pior: %.2f\n", generation, pop->avgFitness, pop->bestFitness, pop->worstFitness);
 }
+
+void saveFitnessData(Population *pop, int generation, FILE *file) {
+    if (!file) {
+        printf("Erro: arquivo de saída inválido.\n");
+        return;
+    }
+
+    // Salva a geração e os valores de fitness no arquivo
+    fprintf(file, "%d,%.2f,%.2f,%.2f\n",
+            generation,
+            pop->avgFitness,
+            pop->bestFitness,
+            pop->worstFitness);
+}
+

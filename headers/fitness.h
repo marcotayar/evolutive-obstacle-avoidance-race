@@ -9,4 +9,7 @@ float calculateFitness(int time, int penalty, float distanceFactor, int cima);
 // Imprime estatísticas de fitness da população
 void printFitnessStats(Population *pop, int generation);
 
+void saveFitnessData(Population *pop, int generation, FILE *file);
+
 #endif
+

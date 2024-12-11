@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include "headers/population.h"
 #include "headers/fitness.h"
 
@@ -12,6 +13,31 @@ static int compareIndividualsByFitness(const void *a, const void *b) {
     return 0;
 }
 
+static int lastFinalX = -1; // Última posição final X
+static int lastFinalY = -1; // Última posição final Y
+static int stagnantPositionGenerations = 0; // Gerações sem mudança na posição final
+const int POSITION_STAGNATION_LIMIT = 100;  // Limite de gerações com posição final estagnada
+
+// Função para obter a posição final de um indivíduo
+void getFinalPosition(Individual *ind, char track[TRACK_HEIGHT][TRACK_WIDTH], int *finalX, int *finalY, int *reachedDestination) {
+    int x = 0, y = 0; // Posição inicial
+    *reachedDestination = 0; // Inicialmente, não atingiu o destino
+
+    for (int i = 0; i < COMMANDS_LENGTH; i++) {
+        switch (ind->commands[i]) {
+            case 0: if (y < TRACK_HEIGHT - 1) y++; break; // Baixo
+            case 1: if (x > 0) x--; break;               // Esquerda
+            case 2: if (x < TRACK_WIDTH - 1) x++; break; // Direita
+        }
+        if (track[y][x] == 'F') {
+            *reachedDestination = 1; // Alcançou o destino
+            break;
+        }
+    }
+    *finalX = x;
+    *finalY = y;
+}
+
 // Ordena a população por fitness (decrescente)
 void sortPopulationByFitness(Population *pop) {
     qsort(pop->individuals, POPULATION_SIZE, sizeof(Individual), compareIndividualsByFitness);
@@ -19,8 +45,6 @@ void sortPopulationByFitness(Population *pop) {
 
 // Inicializa a população com comandos aleatórios
 void initializePopulation(Population *pop) {
-    // Gera população inicial com comandos aleatórios
-    // Comandos: 0 = Baixo, 1 = Esquerda, 2 = Direita
     for (int i = 0; i < POPULATION_SIZE; i++) {
         for (int j = 0; j < COMMANDS_LENGTH; j++) {
             pop->individuals[i].commands[j] = rand() % 3;
@@ -60,7 +84,7 @@ void crossover(Individual *parent1, Individual *parent2, Individual *offspring) 
 
 // Mutação de um indivíduo
 void mutate(Individual *ind) {
-    float mutationRate = 0.03f; // Taxa de mutação de 3%
+    float mutationRate = 0.02f; // Taxa de mutação de 1%
     for (int i = 0; i < COMMANDS_LENGTH; i++) {
         if (((float)rand() / (float)RAND_MAX) < mutationRate) {
             ind->commands[i] = rand() % 3;
@@ -68,10 +92,32 @@ void mutate(Individual *ind) {
     }
 }
 
-// Evolui a população para a próxima geração
 void evolvePopulation(Population *pop, char track[TRACK_HEIGHT][TRACK_WIDTH]) {
     Population nextGen;
     int elitismCount = 20; // Número de melhores indivíduos a serem mantidos
+
+    // Obter a posição final do melhor indivíduo
+    int currentFinalX, currentFinalY, reachedDestination;
+    getFinalPosition(&pop->individuals[0], track, &currentFinalX, &currentFinalY, &reachedDestination);
+
+    // Verificar estagnação da posição final
+    if (currentFinalX == lastFinalX && currentFinalY == lastFinalY && !reachedDestination) {
+        stagnantPositionGenerations++;
+    } else {
+        stagnantPositionGenerations = 0; // Resetar contagem se houve mudança
+        lastFinalX = currentFinalX;
+        lastFinalY = currentFinalY;
+    }
+
+    // Reinicia a população se a posição final estiver estagnada e não for o destino
+    if (stagnantPositionGenerations >= POSITION_STAGNATION_LIMIT) {
+        printf("Estagnação da posição final detectada por %d gerações (não é o destino). Reiniciando a população...\n", POSITION_STAGNATION_LIMIT);
+        initializePopulation(pop);
+        stagnantPositionGenerations = 0;
+        lastFinalX = -1;
+        lastFinalY = -1;
+        return; // Encerrar evolução para esta geração
+    }
 
     // Elite: copia os melhores
     for (int i = 0; i < elitismCount; i++) {
@@ -91,3 +137,4 @@ void evolvePopulation(Population *pop, char track[TRACK_HEIGHT][TRACK_WIDTH]) {
         pop->individuals[i] = nextGen.individuals[i];
     }
 }
+
